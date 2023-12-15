@@ -49,7 +49,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'votechain.wsgi.application'
+WSGI_APPLICATION = 'votechain.wsgi.app'
 
 DATABASES = {
     'default': {
