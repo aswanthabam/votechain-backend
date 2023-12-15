@@ -32,3 +32,4 @@ __pycache__/
 
 # Ignore Django migrations
 **/migrations/
+.vercel
