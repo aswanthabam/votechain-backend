@@ -1,5 +1,8 @@
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv(override=True)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -7,7 +10,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-token')
 
 DEBUG = True if os.environ.get('DEBUG','True') == 'True' else False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -53,8 +56,12 @@ WSGI_APPLICATION = 'votechain.wsgi.app'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': os.environ.get('DB_ENGINE', 'django.db.backends.postgresql'),
+        'NAME': os.environ.get('DB_NAME', 'votechain'),
+        'USER': os.environ.get('DB_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', 'postgres'),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '5432')
     }
 }
 

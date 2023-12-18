@@ -10,5 +10,6 @@
       "src": "/(.*)",
       "dest": "votechain/wsgi.py"
     }
-  ]
+  ],
+  "regions": ["bom1"]
 }
