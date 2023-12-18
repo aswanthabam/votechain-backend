@@ -2,3 +2,5 @@ django
 djangorestframework
 python-dotenv
 psycopg2
+pyodbc
+mssql-django
