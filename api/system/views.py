@@ -21,3 +21,10 @@ class SystemConfigAPIView(APIView):
             return CustomResponse('System Config Created', serializer.data).send_success_response(status=status.HTTP_201_CREATED)
         return CustomResponse('System Config Not Created', serializer.errors).send_failure_response(status=status.HTTP_400_BAD_REQUEST)
     
+    def put(self, request):
+        system_config = SystemConfig.objects.first()
+        serializer = SystemConfigSerializer(instance=system_config, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return CustomResponse('System Config Updated', serializer.data).send_success_response()
+        return CustomResponse('System Config Not Updated', serializer.errors).send_failure_response(status=status.HTTP_400_BAD_REQUEST)
