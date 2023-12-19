@@ -1,6 +1,10 @@
-django
-djangorestframework
-python-dotenv
-psycopg2-binary
-pyodbc
-mssql-django
+Django==4.1.13
+djangorestframework==3.14.0
+pymongo[srv]==3.12.3
+djongo==1.3.6
+pytz==2019.3
+django-cors-headers==4.3.0
+python-dotenv==1.0.0
+psycopg2-binary==2.9.9
+# pyodbc
+# mssql-django
