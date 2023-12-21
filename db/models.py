@@ -15,21 +15,21 @@ class SystemConfig(models.Model):
     wsUrl = models.CharField(max_length=100)
 
 class State(models.Model):
-    id = models.CharField(max_length=100, primary_key=True, unique=True)
+    id = models.CharField(default=uuid4,max_length=100, primary_key=True, unique=True)
     name = models.CharField(max_length=100)
-    districts = models.ForeignKey('District', on_delete=models.CASCADE, related_name='districts')
 
 class District(models.Model):
-    id = models.CharField(max_length=100, primary_key=True, unique=True)
+    id = models.CharField(max_length=100, primary_key=True, unique=True, default=uuid4)
     name = models.CharField(max_length=100)
-    link = models.CharField(max_length=100)
-    description = models.TextField()
-    image = models.CharField(max_length=150)
-    constituencies = models.ForeignKey('Constituency', on_delete=models.CASCADE, related_name='constituencies')
+    link = models.CharField(max_length=100, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    image = models.TextField(null=True, blank=True)
+    state = models.ForeignKey('State', on_delete=models.CASCADE, related_name='state')
 
 class Constituency(models.Model):
-    id = models.CharField(max_length=100, primary_key=True, unique=True)
+    id = models.CharField(max_length=100, primary_key=True, unique=True, default=uuid4)
     name = models.CharField(max_length=100)
-    link = models.CharField(max_length=100)
-    description = models.TextField()
-    image = models.CharField(max_length=150)
+    link = models.CharField(max_length=100, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    image = models.TextField(null=True, blank=True)
+    district = models.ForeignKey('District', on_delete=models.CASCADE, related_name='district')
