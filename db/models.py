@@ -8,6 +8,8 @@ class SystemConfig(models.Model):
     candidateAddress = models.CharField(max_length=100)
     permissionsAddress = models.CharField(max_length=100)
     votechainAddress = models.CharField(max_length=100)
+    voterReaderAddress = models.CharField(max_length=100)
+    linkerAddress = models.CharField(max_length=100)
     # adminAddress = models.CharField(max_length=100)
     rpcUrl = models.CharField(max_length=100)
     wsUrl = models.CharField(max_length=100)
