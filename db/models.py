@@ -1,18 +1,19 @@
 from django.db import models
 from uuid import uuid4
+import os
 
 class SystemConfig(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     voterAddress = models.CharField(max_length=100)
-    # electionAddress = models.CharField(max_length=100)
     candidateAddress = models.CharField(max_length=100)
     permissionsAddress = models.CharField(max_length=100)
     votechainAddress = models.CharField(max_length=100)
     voterReaderAddress = models.CharField(max_length=100)
     linkerAddress = models.CharField(max_length=100)
-    # adminAddress = models.CharField(max_length=100)
     rpcUrl = models.CharField(max_length=100)
     wsUrl = models.CharField(max_length=100)
+    funderAccount = models.CharField(max_length=200,default=os.environ.get('FUNDER_ACCOUNT'))
+    localServer = models.CharField(max_length=200,default="http://localhost:8000")
 
 class State(models.Model):
     id = models.CharField(default=uuid4,max_length=100, primary_key=True, unique=True)
