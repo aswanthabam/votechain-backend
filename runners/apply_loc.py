@@ -11,28 +11,40 @@ for _id,_val in data.items():
         'name': _val['name'],
     }
     res = requests.post(host+'/api/location/states/', data=_data)
-    print(res.text)
+    print("Create State: ",res.status_code, _val['name'])
     _val['id'] = json.loads(res.text)['data']['id']
     for _dis_id,_dis_val in _val['districts'].items():
+        try:des1 = _dis_val['description']
+        except:des1 = None
+        try:img1 = _dis_val['image']
+        except:img1 = None
+        try:link1 = _dis_val['link']
+        except:link1 = None
         _data = {
             'state_id': _val['id'],
             'name': _dis_val['name'],
-            'link': _dis_val['link'], 
-            'description': _dis_val['description'],
-            'image': _dis_val['image'],
+            'link': link1, 
+            'description': des1,
+            'image': img1,
             'state': _val['id'],
         }
         res = requests.post(host+'/api/location/districts/', data=_data)
-        print(res.text)
+        print(" -- Create District: ",res.status_code, _dis_val['name'])
         _dis_val['id'] = json.loads(res.text)['data']['id']
         for _con_id,_con_val in _dis_val['constituency'].items():
+            try:des2 = _con_val['description']
+            except:des2 = None
+            try:img2 = _con_val['image']
+            except:img2 = None
+            try:link2 = _con_val['link']
+            except:link2 = None
             _data = {
                 'name': _con_val['name'],
-                'description': _con_val['description'],
-                'link': _con_val['link'],
-                'image': _con_val['image'],
+                'description': des2,
+                'link': link2,
+                'image': img2,
                 'district': _dis_val['id'],
             }
             res = requests.post(host+'/api/location/constituencies/', data=_data)
-            print(res.text)
+            print("    -- Create Constituency: ",res.status_code, _con_val['name'])
             # _con_val['id'] = json.loads(res.text)['data']['id']
