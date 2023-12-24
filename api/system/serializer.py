@@ -12,6 +12,8 @@ class SystemConfigSerializer(serializers.ModelSerializer):
         instance.wsUrl = validated_data.get('wsUrl', instance.wsUrl)
         instance.voterReaderAddress = validated_data.get('voterReaderAddress', instance.voterReaderAddress)
         instance.linkerAddress = validated_data.get('linkerAddress', instance.linkerAddress)
+        instance.localServer = validated_data.get('localServer', instance.localServer)
+        instance.funderAccount = validated_data.get('funderAccount', instance.funderAccount)
         instance.save()
         return instance
     class Meta:

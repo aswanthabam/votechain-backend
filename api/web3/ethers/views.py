@@ -12,10 +12,11 @@ class EthersFundView(APIView):
             account = Account.from_key(funderKey)
             w3.eth._chain_id
             to_address = request.data.get('to_address') 
+            to_address = w3.to_checksum_address(to_address)
             amount_required = w3.to_wei(0.2, 'ether')
             r_balance = w3.eth.get_balance(to_address)
             if (amount_required <= r_balance):
-                return CustomResponse("Already have enough funds!").send_failure_response(400)
+                return CustomResponse("Already have enough funds!").send_success_response()
             amount_to_send = amount_required - r_balance
             print("Sending ",w3.from_wei(amount_to_send,"ether")," ether to ",to_address)
             transaction = {
