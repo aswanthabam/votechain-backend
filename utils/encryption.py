@@ -19,8 +19,8 @@ def encrypt(data, password):
 
 def decrypt(encrypted_data, password):
     """Decrypts data using a password and Fernet."""
-    salt = encrypted_data[:16]  # Extract salt
-    encrypted_data = encrypted_data[16:]
+    salt = encrypted_data[:44]  # Extract salt
+    encrypted_data = encrypted_data[44:]
     kdf = PBKDF2HMAC(
         algorithm=hashes.SHA256(),
         length=32,
