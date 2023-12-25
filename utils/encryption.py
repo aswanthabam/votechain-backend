@@ -1,33 +1,33 @@
-from cryptography.fernet import Fernet
+from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-import base64
+from Crypto.Cipher import AES
+from Crypto.Random import get_random_bytes
+from Crypto.Util.Padding import pad, unpad
+from base64 import b64encode, b64decode
 
-def encrypt(data, password):
-    """Encrypts data using a password and Fernet."""
-    salt = Fernet.generate_key()  # Generate a secure salt
-    kdf = PBKDF2HMAC(
-        algorithm=hashes.SHA256(),
-        length=32,  # Key length for Fernet
-        salt=salt,
-        iterations=390000,  # Adjust iterations for desired strength
-    )
-    key = base64.urlsafe_b64encode(kdf.derive(password.encode()))
-    f = Fernet(key)
-    encrypted_data = f.encrypt(data.encode())
-    return salt + encrypted_data
 
-def decrypt(encrypted_data, password):
-    """Decrypts data using a password and Fernet."""
-    salt = encrypted_data[:44]  # Extract salt
-    encrypted_data = encrypted_data[44:]
+def derive_key(password, salt:bytes) -> bytes:
     kdf = PBKDF2HMAC(
         algorithm=hashes.SHA256(),
         length=32,
         salt=salt,
-        iterations=390000,
+        iterations=100000,  # Adjust the number of iterations based on your security requirements
+        backend=default_backend()
     )
-    key = base64.urlsafe_b64encode(kdf.derive(password.encode()))
-    f = Fernet(key)
-    decrypted_data = f.decrypt(encrypted_data).decode()
-    return decrypted_data
+    return kdf.derive(password.encode('utf-8'))
+
+def encrypt(data:str, password:str) -> str:
+    salt:bytes = get_random_bytes(16)
+    key = derive_key(password, salt)
+    cipher = AES.new(key, AES.MODE_CBC, iv=get_random_bytes(16))
+    ciphertext = cipher.encrypt(pad(data.encode('utf-8'), AES.block_size))
+    bts: bytes = salt + cipher.iv + ciphertext
+    return bts.hex()
+
+def decrypt(ciphertext:str, password:str):
+    data = bytes.fromhex(ciphertext)
+    salt = data[:16]
+    key = derive_key(password, salt)
+    cipher = AES.new(key, AES.MODE_CBC, iv=data[16:32])
+    return unpad(cipher.decrypt(data[32:]), AES.block_size).decode('utf-8')
