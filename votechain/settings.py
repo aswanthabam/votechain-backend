@@ -13,6 +13,7 @@ DEBUG = True if os.environ.get('DEBUG','True') == 'True' else False
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
+    'daphne',
     # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -56,7 +57,17 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'votechain.wsgi.app'
+ASGI_APPLICATION = 'votechain.asgi.app'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+        },
+    },
+}
+
 
 if os.environ.get('DB_ENGINE', 'django.db.backends.postgresql') == 'djongo':
     DATABASES = {
