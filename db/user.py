@@ -11,4 +11,8 @@ class UserAuth(models.Model):
 class UserRecovery(models.Model):
     id = models.CharField(max_length=100, primary_key=True, unique=True,default=uuid4)
     userAuth = models.ForeignKey('UserAuth', on_delete=models.CASCADE, related_name='userAuth')
-    
+
+class UserDataAccess(models.Model):
+    id = models.CharField(max_length=100, primary_key=True, unique=True,default=uuid4)
+    token = models.CharField(max_length=100, unique=True, null=False, blank=False)
+    scope = models.CharField(max_length=200, null=False, blank=False)
