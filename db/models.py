@@ -14,6 +14,7 @@ class SystemConfig(models.Model):
     wsUrl = models.CharField(max_length=100)
     funderAccount = models.CharField(max_length=200,default=os.environ.get('FUNDER_ACCOUNT'))
     localServer = models.CharField(max_length=200,default="http://localhost:8000")
+    websocketServer = models.CharField(max_length=200,default="ws://localhost:8000")
 
 class State(models.Model):
     id = models.CharField(default=uuid4,max_length=100, primary_key=True, unique=True)
