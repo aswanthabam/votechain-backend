@@ -28,6 +28,7 @@ def encrypt(data:str, password:str) -> str:
 def decrypt(ciphertext:str, password:str):
     data = bytes.fromhex(ciphertext)
     salt = data[:16]
+    iv = data[16:32]
     key = derive_key(password, salt)
-    cipher = AES.new(key, AES.MODE_CBC, iv=data[16:32])
+    cipher = AES.new(key, AES.MODE_CBC, iv=iv)
     return unpad(cipher.decrypt(data[32:]), AES.block_size).decode('utf-8')

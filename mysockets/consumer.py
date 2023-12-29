@@ -10,20 +10,6 @@ class DataAccessor(AsyncWebsocketConsumer):
 
     async def connect(self):
         await self.accept()
-        query = urllib.parse.parse_qs(self.scope["query_string"].decode('utf-8'))
-        token = query.get('token')
-        if not token:
-            await self.send(text_data=json.dumps({
-                'type': 'error',
-                'data': 'Invalid Token Provided!'
-            }))
-            self.close()
-            return
-        token = token[0]
-        await self.channel_layer.group_add(
-            f"dataaccess-{token}",
-            self.channel_name
-        )
         
     async def receive(self, text_data=None, bytes_data=None):
         data = json.loads(text_data)
@@ -35,6 +21,21 @@ class DataAccessor(AsyncWebsocketConsumer):
                 'data': 'Invalid Data Provided!'
             }))
             return
+        if _type == 'connect':
+             if not token:
+                await self.send(text_data=json.dumps({
+                    'type': 'error',
+                    'data': 'Invalid Token Provided!'
+                }))
+                self.close()
+                return
+             await self.channel_layer.group_add(
+                f"dataaccess-{token}",
+                self.channel_name
+            )
+             await self.channel_layer.group_send(f"dataaccess-{token}",{
+                'type': 'connect.response',
+                'status': 'success'})
         if _type == 'send':
             await self.channel_layer.group_send(
                 f"dataaccess-{token}",{
@@ -42,7 +43,15 @@ class DataAccessor(AsyncWebsocketConsumer):
                     'data': data.get('data')
                 }
             )
-
+            await self.send(text_data=json.dumps({
+                'type': 'send_response',
+                'status': 'success'}))
+    
+    async def connect_response(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'connect_response',
+            'status': event['status']
+        }))
     async def send_data(self, event):
         await self.send(text_data=json.dumps({
             'type': 'send',
@@ -53,5 +62,5 @@ class DataAccessor(AsyncWebsocketConsumer):
             
             
 
-    def disconnect(self, close_code):
+    async def disconnect(self, close_code):
         pass
