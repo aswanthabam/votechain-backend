@@ -25,3 +25,9 @@ This repo contains backend code for votechain. blockchain based e-votting system
   ```
   python manage.py runserver
   ```
+
+- For running websockets you want to setup redis server and corresponding envs
+
+```bash
+redis-server
+```
