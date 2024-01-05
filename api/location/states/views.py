@@ -2,6 +2,15 @@ from rest_framework.views import APIView
 from db.models import District, State
 from .serializer import StateSerializer
 from utils.response import CustomResponse
+from django.db.models import Q
+class StateListAPIView(APIView):
+    def get(self, request):
+        states = State.objects.all()
+        search = request.GET.get('search')
+        if search:
+            states = states.filter(Q(name__icontains=search) | Q(code__icontains=search))
+        serializer = StateSerializer(states, many=True)
+        return CustomResponse('Got States', serializer.data).send_success_response()
 
 class StateAPIView(APIView):
     def get(self, request):
