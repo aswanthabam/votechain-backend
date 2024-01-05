@@ -56,12 +56,21 @@ for row in districts[1:]:
     name = row[3]
     link = row[4]
     no_of_constituencies = row[4]
+    description = row[5]
+    image = row[6]
+    
+    link = link if link != 'none' else None
+    description = description if description != 'none' else None
+    image = image if image != 'none' else None
+
     district_data.append({
          "id":id,
          "code": code, 
          "state": db["states"].find_one({"code": state_code})["_id"], 
          "name": name, 
          "link": link, 
+        "description": description,
+        "image": image,
          "no_of_constituencies": no_of_constituencies
     })
 
@@ -80,12 +89,21 @@ for row in constituencies[1:]:
     district_code = row[2]
     name = row[3]
     link = row[4]
+    description = row[5]
+    image = row[6]
+    
+    link = link if link != 'none' else None
+    description = description if description != 'none' else None
+    image = image if image != 'none' else None
+
     constituency_data.append({
          "id":id,
          "code": code, 
          "district": db["districts"].find_one({"code": district_code})["_id"], 
          "name": name, 
-         "link": link
+         "link": link,
+        "description": description,
+        "image": image
     })
 
 collection.insert_many(constituency_data)

@@ -18,20 +18,37 @@ class SystemConfig(models.Model):
 
 class State(models.Model):
     id = models.CharField(default=uuid4,max_length=100, primary_key=True, unique=True)
-    name = models.CharField(max_length=100)
+    code = models.CharField(max_length=10, unique=True,null=False, blank=False)
+    name = models.CharField(max_length=200, null=False, blank=False)
+    no_of_districts = models.IntegerField(null=False, blank=False)
+
+    class Meta:
+        db_table = 'states'
+        managed = False
 
 class District(models.Model):
     id = models.CharField(max_length=100, primary_key=True, unique=True, default=uuid4)
-    name = models.CharField(max_length=100)
-    link = models.CharField(max_length=100, null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
-    image = models.TextField(null=True, blank=True)
+    code = models.CharField(max_length=10, unique=True,null=False, blank=False)
+    name = models.CharField(max_length=200, null=False, blank=False)
     state = models.ForeignKey('State', on_delete=models.CASCADE, related_name='state')
+    no_of_constituencies = models.IntegerField(null=False, blank=False)
+    link = models.CharField(max_length=200, null=True, blank=False)
+    description = models.TextField(null=True, blank=False)
+    image = models.CharField(max_length=200, null=True, blank=False)
+
+    class Meta:
+        db_table = 'districts'
+        managed = False
 
 class Constituency(models.Model):
     id = models.CharField(max_length=100, primary_key=True, unique=True, default=uuid4)
-    name = models.CharField(max_length=100)
-    link = models.CharField(max_length=100, null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
-    image = models.TextField(null=True, blank=True)
+    code = models.CharField(max_length=10, unique=True,null=False, blank=False)
+    name = models.CharField(max_length=200, null=False, blank=False)
     district = models.ForeignKey('District', on_delete=models.CASCADE, related_name='district')
+    link = models.CharField(max_length=200, null=True, blank=False)
+    description = models.TextField(null=True, blank=False)
+    image = models.CharField(max_length=200, null=True, blank=False)
+
+    class Meta:
+        db_table = 'constituencies'
+        managed = False
