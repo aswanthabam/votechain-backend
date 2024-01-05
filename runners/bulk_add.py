@@ -28,11 +28,18 @@ state_data = []
 print(f"Adding {len(states[1:])} states to database.")
 
 for row in states[1:]:
-    code = row[0]
-    name = row[1]
-    no_of_districts = row[2]
-    no_of_constituencies = row[3]
-    state_data.append({"code": code, "name": name, "no_of_districts": no_of_districts, "no_of_constituencies": no_of_constituencies})
+    id = row[0]
+    code = row[1]
+    name = row[2]
+    no_of_districts = row[3]
+    no_of_constituencies = row[4]
+    state_data.append({
+         "id":id,
+         "code": code,
+         "name": name, 
+         "no_of_districts": no_of_districts, 
+         "no_of_constituencies": no_of_constituencies
+    })
 
 collection.insert_many(state_data)
 
@@ -43,12 +50,20 @@ districts = read_excel_file('constituency.xlsx', 'Districts')
 print(f"Adding {len(districts[1:])} districts to database.")
 
 for row in districts[1:]:
-    code = row[0]
-    state_code = row[1]
-    name = row[2]
-    link = row[3]
+    id = row[0]
+    code = row[1]
+    state_code = row[2]
+    name = row[3]
+    link = row[4]
     no_of_constituencies = row[4]
-    district_data.append({"code": code, "state_code": state_code, "name": name, "link": link, "no_of_constituencies": no_of_constituencies})
+    district_data.append({
+         "id":id,
+         "code": code, 
+         "state": db["states"].find_one({"code": state_code})["_id"], 
+         "name": name, 
+         "link": link, 
+         "no_of_constituencies": no_of_constituencies
+    })
 
 collection.insert_many(district_data)
 
@@ -60,10 +75,17 @@ constituencies = read_excel_file('constituency.xlsx', 'Constituencies')
 print(f"Adding {len(constituencies[1:])} constituencies to database.")
 
 for row in constituencies[1:]:
-    code = row[0]
-    district_code = row[1]
-    name = row[2]
-    link = row[3]
-    constituency_data.append({"code": code, "district_code": district_code, "name": name, "link": link})
+    id = row[0]
+    code = row[1]
+    district_code = row[2]
+    name = row[3]
+    link = row[4]
+    constituency_data.append({
+         "id":id,
+         "code": code, 
+         "district": db["districts"].find_one({"code": district_code})["_id"], 
+         "name": name, 
+         "link": link
+    })
 
 collection.insert_many(constituency_data)
