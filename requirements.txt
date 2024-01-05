@@ -12,5 +12,6 @@ web3==6.13.0
 cryptography
 channels[daphne]
 channels-redis
+openpyxl
 # pyodbc
 # mssql-django
