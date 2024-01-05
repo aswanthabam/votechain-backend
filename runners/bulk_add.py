@@ -55,9 +55,9 @@ for row in districts[1:]:
     state_code = row[2]
     name = row[3]
     link = row[4]
-    no_of_constituencies = row[4]
-    description = row[5]
-    image = row[6]
+    no_of_constituencies = row[5]
+    description = row[6]
+    image = row[7]
     
     link = link if link != 'none' else None
     description = description if description != 'none' else None

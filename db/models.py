@@ -20,7 +20,7 @@ class State(models.Model):
     id = models.CharField(default=uuid4,max_length=100, primary_key=True, unique=True)
     code = models.CharField(max_length=10, unique=True,null=False, blank=False)
     name = models.CharField(max_length=200, null=False, blank=False)
-    no_of_districts = models.IntegerField(null=False, blank=False)
+    no_of_districts = models.IntegerField(null=False, blank=False, default=0)
 
     class Meta:
         db_table = 'states'
@@ -31,8 +31,8 @@ class District(models.Model):
     code = models.CharField(max_length=10, unique=True,null=False, blank=False)
     name = models.CharField(max_length=200, null=False, blank=False)
     state = models.ForeignKey('State', on_delete=models.CASCADE, related_name='state')
-    no_of_constituencies = models.IntegerField(null=False, blank=False)
-    link = models.CharField(max_length=200, null=True, blank=False)
+    no_of_constituencies = models.IntegerField(null=False, blank=False, default=0)
+    link = models.TextField(null=True, blank=False)
     description = models.TextField(null=True, blank=False)
     image = models.CharField(max_length=200, null=True, blank=False)
 

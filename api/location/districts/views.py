@@ -3,6 +3,16 @@ from db.models import District, State
 from rest_framework.response import Response
 from .serializer import DistrictSerializer
 from utils.response import CustomResponse
+from django.db.models import Q
+
+class DistrictListAPIView(APIView):
+    def get(self, request):
+        districts = District.objects.all()
+        search = request.GET.get('search')
+        if search:
+            districts = districts.filter(Q(name__icontains=search) | Q(code__icontains=search) | Q(description__icontains=search))
+        serializer = DistrictSerializer(districts, many=True)
+        return CustomResponse('Got Districts', serializer.data).send_success_response()
 
 class DistrictAPIView(APIView):
     def get(self, request):

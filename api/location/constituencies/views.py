@@ -2,6 +2,16 @@ from rest_framework.views import APIView
 from db.models import Constituency, District, State
 from .serializer import ConstituencySerializer
 from utils.response import CustomResponse
+from django.db.models import Q
+
+class ConstituencyListAPIView(APIView):
+    def get(self, request):
+        constituencies = Constituency.objects.all()
+        search = request.GET.get('search')
+        if search:
+            constituencies = constituencies.filter(Q(name__icontains=search) | Q(code__icontains=search) | Q(description__icontains=search))
+        serializer = ConstituencySerializer(constituencies, many=True)
+        return CustomResponse('Got Constituencies', serializer.data).send_success_response()
 
 class ConstituencyAPIView(APIView):
     def get(self, request):
