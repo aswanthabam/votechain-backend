@@ -8,8 +8,14 @@ class ConstituencyListAPIView(APIView):
     def get(self, request):
         constituencies = Constituency.objects.all()
         search = request.GET.get('search')
+        constituency_id = request.GET.get('constituency_id')
+        district_id = request.GET.get('district_id')
         if search:
             constituencies = constituencies.filter(Q(name__icontains=search) | Q(code__icontains=search) | Q(description__icontains=search))
+        if constituency_id:
+            constituencies = constituencies.filter(id=constituency_id)
+        if district_id:
+            constituencies = constituencies.filter(district=district_id)
         serializer = ConstituencySerializer(constituencies, many=True)
         return CustomResponse('Got Constituencies', serializer.data).send_success_response()
 

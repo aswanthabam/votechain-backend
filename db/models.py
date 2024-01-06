@@ -17,7 +17,7 @@ class SystemConfig(models.Model):
     websocketServer = models.CharField(max_length=200,default="ws://localhost:8000")
 
 class State(models.Model):
-    id = models.CharField(default=uuid4,max_length=100, primary_key=True, unique=True)
+    id = models.CharField(primary_key=True,default=uuid4,max_length=100,null=False,blank=False, unique=True, db_column='id')
     code = models.CharField(max_length=10, unique=True,null=False, blank=False)
     name = models.CharField(max_length=200, null=False, blank=False)
     no_of_districts = models.IntegerField(null=False, blank=False, default=0)
@@ -27,10 +27,10 @@ class State(models.Model):
         managed = False
 
 class District(models.Model):
-    id = models.CharField(max_length=100, primary_key=True, unique=True, default=uuid4)
+    id = models.CharField(primary_key=True,max_length=100,null=False,blank=False, unique=True, default=uuid4, db_column='id')
     code = models.CharField(max_length=10, unique=True,null=False, blank=False)
     name = models.CharField(max_length=200, null=False, blank=False)
-    state = models.ForeignKey('State', on_delete=models.CASCADE, related_name='state')
+    state = models.CharField(max_length=200, null=False, blank=False)
     no_of_constituencies = models.IntegerField(null=False, blank=False, default=0)
     link = models.TextField(null=True, blank=False)
     description = models.TextField(null=True, blank=False)
@@ -41,10 +41,10 @@ class District(models.Model):
         managed = False
 
 class Constituency(models.Model):
-    id = models.CharField(max_length=100, primary_key=True, unique=True, default=uuid4)
+    id = models.CharField(primary_key=True,max_length=100,null=False,blank=False, unique=True, default=uuid4, db_column='id')
     code = models.CharField(max_length=10, unique=True,null=False, blank=False)
     name = models.CharField(max_length=200, null=False, blank=False)
-    district = models.ForeignKey('District', on_delete=models.CASCADE, related_name='district')
+    district = models.CharField(max_length=200, null=False, blank=False)
     link = models.CharField(max_length=200, null=True, blank=False)
     description = models.TextField(null=True, blank=False)
     image = models.CharField(max_length=200, null=True, blank=False)

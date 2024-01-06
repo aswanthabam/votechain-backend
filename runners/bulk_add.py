@@ -24,7 +24,7 @@ db = client[DB_NAME]
 collection = db["states"]
 states = read_excel_file('constituency.xlsx', 'States')
 state_data = []
-
+state_linker = {}
 print(f"Adding {len(states[1:])} states to database.")
 
 for row in states[1:]:
@@ -40,13 +40,14 @@ for row in states[1:]:
          "no_of_districts": no_of_districts, 
          "no_of_constituencies": no_of_constituencies
     })
+    state_linker[code] = id
 
 collection.insert_many(state_data)
 
 district_data = []
 collection = db["districts"]
 districts = read_excel_file('constituency.xlsx', 'Districts')
-
+district_linker = {}
 print(f"Adding {len(districts[1:])} districts to database.")
 
 for row in districts[1:]:
@@ -62,17 +63,17 @@ for row in districts[1:]:
     link = link if link != 'none' else None
     description = description if description != 'none' else None
     image = image if image != 'none' else None
-
     district_data.append({
          "id":id,
          "code": code, 
-         "state": db["states"].find_one({"code": state_code})["_id"], 
+         "state": state_linker[state_code], 
          "name": name, 
          "link": link, 
         "description": description,
         "image": image,
          "no_of_constituencies": no_of_constituencies
     })
+    district_linker[code] = id
 
 collection.insert_many(district_data)
 
@@ -99,7 +100,7 @@ for row in constituencies[1:]:
     constituency_data.append({
          "id":id,
          "code": code, 
-         "district": db["districts"].find_one({"code": district_code})["_id"], 
+         "district": district_linker[district_code], 
          "name": name, 
          "link": link,
         "description": description,
