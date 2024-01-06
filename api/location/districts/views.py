@@ -9,8 +9,14 @@ class DistrictListAPIView(APIView):
     def get(self, request):
         districts = District.objects.all()
         search = request.GET.get('search')
+        district_id = request.GET.get('district_id')
+        state_id = request.GET.get('state_id')
         if search:
             districts = districts.filter(Q(name__icontains=search) | Q(code__icontains=search) | Q(description__icontains=search))
+        if district_id:
+            districts = districts.filter(id=district_id)
+        if state_id:
+            districts = districts.filter(state=state_id)
         serializer = DistrictSerializer(districts, many=True)
         return CustomResponse('Got Districts', serializer.data).send_success_response()
 
