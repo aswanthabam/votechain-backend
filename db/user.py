@@ -7,7 +7,13 @@ class UserAuth(models.Model):
     aadhar = models.CharField(max_length=100, unique=True, null=False, blank=False)
     enc1 = models.CharField(max_length=200, null=False, blank=False) # encrypted mneumonics with password
     enc2 = models.CharField(max_length=200, null=False, blank=False) # encrypted mneumonic with otp
+    face_registerd = models.BooleanField(default=False)
 
+class UserFace(models.Model):
+    id = models.CharField(max_length=100, primary_key=True, unique=True,default=uuid4)
+    userAuth = models.ForeignKey('UserAuth', on_delete=models.CASCADE, related_name='userAuth')
+    face = models.CharField(max_length=100, unique=True, null=False, blank=False)
+    updated_on = models.DateTimeField(auto_now=True)
 class UserRecovery(models.Model):
     id = models.CharField(max_length=100, primary_key=True, unique=True,default=uuid4)
     userAuth = models.ForeignKey('UserAuth', on_delete=models.CASCADE, related_name='userAuth')
