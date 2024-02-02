@@ -62,4 +62,4 @@ class FaceVerificationAPI(APIView):
             return CustomResponse("No face found in the image!").send_failure_response(400)
         user_face:list = json.loads(str(user_face.face))
         result = FaceConfig.verify_face(embeddings,user_face)
-        return CustomResponse("Face Verification API Result",data={'result':result}).send_success_response()
+        return CustomResponse("Face Verification API Result",data={'result':result[0],'similarity':result[1]}).send_success_response()

@@ -38,4 +38,5 @@ class FaceConfig(AppConfig):
     @staticmethod
     def verify_face(face1, face2) -> bool:
         from scipy.spatial.distance import cosine
-        return (1 - cosine(face1, face2)) > FaceConfig.FACE_THRESHOLD
+        similarity = 1 - cosine(face1, face2)
+        return (similarity > FaceConfig.FACE_THRESHOLD, (similarity - 0.9) * 10)
