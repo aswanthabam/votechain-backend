@@ -54,12 +54,13 @@ class FaceVerificationAPI(APIView):
         name = str(uuid4())
         fs.save(name,face.file)
         url = fs.path(name)
-        print(url)
         embeddings = FaceConfig.get_face_embeddings(url)
         fs.delete(name)
         if embeddings is None:
             fs.delete(name)
             return CustomResponse("No face found in the image!").send_failure_response(400)
+        face_key = user_face.face_key
         user_face:list = json.loads(str(user_face.face))
         result = FaceConfig.verify_face(embeddings,user_face)
-        return CustomResponse("Face Verification API Result",data={'result':result[0],'similarity':result[1]}).send_success_response()
+        face_key = face_key if result[0] else None
+        return CustomResponse("Face Verification API Result",data={'result':result[0],'similarity':result[1],'face_key':face_key}).send_success_response()
