@@ -1,0 +1,11 @@
+# Ignore everything (folders and files) on root only
+/*
+!api
+!db
+!mysockets
+!utils
+!votechain
+!vercel.json
+!manage.py
+!requirements.txt
+!*.py
