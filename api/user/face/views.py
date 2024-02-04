@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from utils.response import CustomResponse
-from utils.face import FaceVerifier, FaceEmbedding
+from django.conf import settings
+if not settings.DEBUG:from utils.face import FaceVerifier, FaceEmbedding
 from django.http import HttpRequest
 from django.core.files.storage import FileSystemStorage
 from uuid import uuid4
