@@ -21,3 +21,4 @@ openpyxl
 # dlib
 # numpy
 # scipy
+# opencv-python
