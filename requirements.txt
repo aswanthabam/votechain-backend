@@ -15,3 +15,10 @@ channels-redis
 openpyxl
 # pyodbc
 # mssql-django
+
+# Face verrification requirements
+
+# dlib
+# numpy
+# scipy
+# opencv-python

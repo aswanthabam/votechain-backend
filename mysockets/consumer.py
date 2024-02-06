@@ -46,15 +46,48 @@ class DataAccessor(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps({
                 'type': 'send_response',
                 'status': 'success'}))
+        if _type == 'send_back':
+            await self.channel_layer.group_send(
+                f"dataaccess-{token}",{
+                    'type': 'sendback.data',
+                    'data': data.get('data')
+                }
+            )
+            await self.send(text_data=json.dumps({
+                'type': 'sendback_response',
+                'status': 'success'}))
+        if _type == 'result':
+            await self.channel_layer.group_send(
+                f"dataaccess-{token}",{
+                    'type': 'result.data',
+                    'data': data.get('data')
+                }
+            )
+            await self.send(text_data=json.dumps({
+                'type': 'result_response',
+                'status': 'success'}))
     
     async def connect_response(self, event):
         await self.send(text_data=json.dumps({
             'type': 'connect_response',
             'status': event['status']
         }))
+    
     async def send_data(self, event):
         await self.send(text_data=json.dumps({
             'type': 'send',
+            'data': event['data']
+        }))
+    
+    async def sendback_data(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'send_back',
+            'data': event['data']
+        }))
+
+    async def result_data(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'result',
             'data': event['data']
         }))
             

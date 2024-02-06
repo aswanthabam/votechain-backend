@@ -1,10 +1,8 @@
 from rest_framework import serializers
 from db.user import UserAuth
-from utils.encryption import encrypt
-from django.conf import settings
 
 class UserAuthSerializer(serializers.ModelSerializer):
-
+    face_id = serializers.CharField(read_only=True, source='face.id')
     def create(self, validated_data):
         obj =  UserAuth(**{
             'uid': validated_data['uid'],
@@ -17,5 +15,11 @@ class UserAuthSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = UserAuth
-        fields = '__all__'
+        fields = [
+            'uid',
+            'aadhar',
+            'enc1',
+            'enc2',
+            'face_id'
+        ]
         write_only_fields = ['id','uid','aadhar']

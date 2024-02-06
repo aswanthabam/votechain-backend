@@ -39,10 +39,7 @@ class AuthAPIRegisterView(APIView):
                 serializer.save()
                 return CustomResponse(
                     message="Auth",
-                    data={
-                        'message': 'Auth',
-                        'data': serializer.data
-                    }
+                    data=serializer.data
                 ).send_success_response()
             
             return CustomResponse("Error Occured while authenticating user!",data=serializer.errors).send_failure_response(400)
