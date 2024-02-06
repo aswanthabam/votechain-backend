@@ -30,7 +30,12 @@ class FaceRegistrationAPI(APIView):
             embeddings = FaceVerifier.get_embeddings(url)
             fs.delete(name)
             if embeddings is None:
-                return CustomResponse("No face found in the image!").send_failure_response(400)
+                return CustomResponse("No face found in the image!",data={
+                    'status':'fail',
+                    "face_found":False,
+                    'matching':False,
+                    'final':final
+                }).send_success_response(200)
             embeddings = embeddings.tolist()
             cache = UserFaceCache.objects.filter(face_id=face).first()
             if cache is None:
@@ -44,7 +49,12 @@ class FaceRegistrationAPI(APIView):
                 face_embed = FaceEmbedding(embeddings=existing_embeddings,embedding=existing_embedding)
                 status = face_embed.add_embeddings(embeddings)
                 if status is False:
-                    return CustomResponse("Face not consistent!").send_failure_response(400)
+                    return CustomResponse("Face not consistent!",data={
+                    'status':'fail',
+                    "face_found":True,
+                    'matching':False,
+                    'final':final
+                }).send_success_response(400)
                 cache.embedding = json.dumps(face_embed.embedding)
                 cache.embeddings = json.dumps(face_embed.embeddings)
                 cache.save()
@@ -57,6 +67,8 @@ class FaceRegistrationAPI(APIView):
                 user.save()
             return CustomResponse("Face Registration API Result",data={
                 'status':'success',
+                'face_found':True,
+                'matching':True,
                 'final':final
             }).send_success_response()
         except Exception as e:
@@ -82,7 +94,7 @@ class FaceVerificationAPI(APIView):
         fs.save(name,face.file)
         url = fs.path(name)
         embeddings = FaceVerifier.get_embeddings(url)
-        # fs.delete(name)
+        fs.delete(name)
         if embeddings is None:
             print(" # No face found in the image!")
             return CustomResponse("No face found in the image!", data={
