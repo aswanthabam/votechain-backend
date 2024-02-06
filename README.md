@@ -31,3 +31,8 @@ This repo contains backend code for votechain. blockchain based e-votting system
 ```bash
 redis-server
 ```
+
+> For running the complete project (i.e face verification) we need to install the following, and set DEBUG environment variable to False
+> - dlib
+> - opencv-python
+> - scipy
