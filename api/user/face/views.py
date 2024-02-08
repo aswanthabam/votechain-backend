@@ -8,6 +8,7 @@ from uuid import uuid4
 from db.user import UserFace, UserAuth, UserFaceCache
 from django.db.models import Q
 import json
+from utils.security import require_app_key
 
 class FaceRegistrationAPI(APIView):
 
@@ -76,7 +77,7 @@ class FaceRegistrationAPI(APIView):
             return CustomResponse(str(e)).send_failure_response(400)
 
 class FaceVerificationAPI(APIView):
-
+    @require_app_key
     def post(self, request:HttpRequest):
         face = request.FILES.get('face')
         uid = request.data.get('uid')
