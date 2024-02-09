@@ -1,11 +1,23 @@
 from rest_framework.views import APIView
 from django.core.files.storage import FileSystemStorage
-from .serializers import CandidateProfileSerializer, CandidateEducationSerializer
+from .serializers import CandidateProfileSerializer, CandidateEducationSerializer, CandidateExperienceSerializer
 from utils.response import CustomResponse
 from db.candidate import CandidateProfile
 from django.http import QueryDict
 from uuid import uuid4
 class CandidateProfileRegisterAPI(APIView):
+    def get(self,request):
+        candidateId = request.GET.get('candidateId')
+        if candidateId is None:
+            return CustomResponse("Candidate ID is required!").send_failure_response(400)
+        candidate = CandidateProfile.objects.filter(candidateId=candidateId).first()
+        if candidate is None:
+            return CustomResponse("Invalid Candidate ID!").send_failure_response(400)
+        serializer = CandidateProfileSerializer(candidate,many=False,partial=True)
+        return CustomResponse(
+            message="Profile",
+            data={**serializer.data}
+        ).send_success_response()
     def post(self,request):
         try:
             photo = request.FILES.get('photo')
@@ -85,17 +97,20 @@ class CandidateEducationAPI(APIView):
         except Exception as e:
             print(e)
             return CustomResponse("Error Occured while registering education!").send_failure_response(500)
-
 class CandidateExperienceAPI(APIView):
     def post(self,request):
-        serializer = CandidateExperienceAPI(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return CustomResponse(
-                message="Experience",
-                data={**serializer.data}
-            ).send_success_response()
-        else:
-            return CustomResponse("Error Occured while registering education!",data=serializer.errors).send_failure_response(400)
+        try:
+            serializer = CandidateExperienceSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return CustomResponse(
+                    message="Experience",
+                    data={**serializer.data}
+                ).send_success_response()
+            else:
+                return CustomResponse("Error Occured while registering education!",data=serializer.errors).send_failure_response(400)
+        except Exception as e:
+            print(e)
+            return CustomResponse("Error Occured while registering education!").send_failure_response(500)
         
         
