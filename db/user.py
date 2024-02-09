@@ -41,5 +41,13 @@ class UserDataAccess(models.Model):
 
 class AppInstance(models.Model):
     id = models.CharField(max_length=48, primary_key=True, unique=True,default=uuid4)
-    userId = models.OneToOneField('UserAuth', on_delete=models.CASCADE, related_name='appi_instance_user_id')
+    userId = models.OneToOneField('UserAuth', on_delete=models.CASCADE, related_name='app_instance_user_id')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class AccessKey(models.Model):
+    id = models.CharField(max_length=48, primary_key=True, unique=True,default=uuid4)
+    userId = models.OneToOneField('UserAuth', on_delete=models.CASCADE, related_name='access_key_user_id')
+    key = models.CharField(max_length=100, unique=True, null=False, blank=False)
+    scope = models.CharField(max_length=200, null=False, blank=False)
+    clientId = models.CharField(max_length=100, unique=True, null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)

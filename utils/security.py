@@ -4,8 +4,7 @@ from django.http import HttpRequest
 def require_app_key(func):
     def wrapper(*args, **kwargs):
         request :HttpRequest= args[1]
-        print(list(request.headers.keys()))
-        app_key = request.headers.get('APP_KEY')
+        app_key = request.GET.get('APP_KEY')
         if app_key is None:
             return CustomResponse("App Key is required!").send_failure_response(400)
         user = UserAuth.objects.filter(app_key=app_key).first()

@@ -70,7 +70,8 @@ class FaceRegistrationAPI(APIView):
                 'status':'success',
                 'face_found':True,
                 'matching':True,
-                'final':final
+                'final':final,
+                'face_key':face.face_key
             }).send_success_response()
         except Exception as e:
             print(e)

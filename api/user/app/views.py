@@ -1,8 +1,8 @@
 from rest_framework.views import APIView
 from utils.response import CustomResponse
-from db.user import UserAuth, random_hex
+from db.user import UserAuth, random_hex, AccessKey, AppInstance
 from utils.encryption import decrypt, encrypt
-
+from utils.security import require_app_key
 class ReallocateAppIDView(APIView):
 
     def post(self, request):
@@ -29,4 +29,27 @@ class ReallocateAppIDView(APIView):
             print(e)
             return CustomResponse("An error occured (3)").send_failure_response(500)
 
-        
+
+class GetAccessKey(APIView):
+    @require_app_key
+    def post(self, request):
+        try:
+            user = request.user
+            if user is None:
+                return CustomResponse("User not found!").send_failure_response(400)
+            clientId = request.data.get('clientId')
+            if clientId is None:
+                return CustomResponse("Client ID is required!").send_failure_response(400)
+            uid = request.user.uid
+            print(uid)
+            scope = request.data.get('scope')
+            if scope is None:
+                return CustomResponse("Scope is required!").send_failure_response(400)
+            key = random_hex()
+            access_key = AccessKey.objects.create(userId=user,key=key,scope=scope,clientId=clientId)
+            return CustomResponse("Access Key Created",data={
+                'access_key':key
+            }).send_success_response()
+        except Exception as e:
+            print(e)
+            return CustomResponse("An error occured").send_failure_response(500)
