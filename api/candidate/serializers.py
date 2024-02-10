@@ -5,7 +5,7 @@ from rest_framework.validators import UniqueValidator
 
 class CandidateProfileSerializer(serializers.ModelSerializer):
     
-    candidateId = serializers.IntegerField(validators=[UniqueValidator(queryset=CandidateProfile.objects.all(),message='Candidate already has a profile')])
+    # candidateId = serializers.CharField(required=False)#,validators=[UniqueValidator(queryset=CandidateProfile.objects.all(),message='Candidate already has a profile')])
     profileId = serializers.CharField(read_only=True, source='id')
     education = serializers.SerializerMethodField()
     experience = serializers.SerializerMethodField()
@@ -13,10 +13,11 @@ class CandidateProfileSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         obj =  CandidateProfile(**{
-            'candidateId': validated_data['candidateId'],
+            'candidateId': validated_data.get('candidateId'),
             'about': validated_data['about'],
             'photo': validated_data['photo'],
-            'userId': validated_data['userId']
+            'userId': validated_data['userId'],
+            'name': validated_data['name']
         })
         obj.save()
         return obj
@@ -46,20 +47,20 @@ class CandidateProfileSerializer(serializers.ModelSerializer):
             'education',
             'experience',
             'documents',
+            'name',
             'userId'
         ]
 
 class CandidateEducationSerializer(serializers.ModelSerializer):
 
-    candidateId = serializers.IntegerField(source='candidate.candidateId')
     educationId = serializers.CharField(read_only=True, source='id')
 
-    def validate_candidateId(self, attrs):
-        print(attrs)
-        candidate = CandidateProfile.objects.filter(candidateId=attrs).first()
-        if candidate is None:
-            raise serializers.ValidationError("Candidate does not exist.")
-        return candidate
+    # def validate_candidateId(self, attrs):
+    #     print(attrs)
+    #     candidate = CandidateProfile.objects.filter(candidateId=attrs).first()
+    #     if candidate is None:
+    #         raise serializers.ValidationError("Candidate does not exist.")
+    #     return candidate
     
     def create(self, validated_data):
         print(validated_data)
@@ -67,7 +68,7 @@ class CandidateEducationSerializer(serializers.ModelSerializer):
             'title': validated_data.get('title'),
             'description': validated_data.get('description'),
             'fromWhere': validated_data.get('fromWhere'),
-            'candidate': validated_data.get('candidate').get('candidateId')
+            'candidate': self.context.get('candidate')
         })
         obj.save()
         return obj
@@ -77,20 +78,19 @@ class CandidateEducationSerializer(serializers.ModelSerializer):
             'educationId',
             'title',
             'description',
-            'fromWhere',
-            'candidateId'
+            'fromWhere'
         ]
 class CandidateExperienceSerializer(serializers.ModelSerializer):
 
-    candidateId = serializers.IntegerField(source='candidate.candidateId')
+    # candidateId = serializers.IntegerField(source='candidate.candidateId')
     experienceId = serializers.CharField(read_only=True, source='id')
 
-    def validate_candidateId(self, attrs):
-        print(attrs)
-        candidate = CandidateProfile.objects.filter(candidateId=attrs).first()
-        if candidate is None:
-            raise serializers.ValidationError("Candidate does not exist.")
-        return candidate
+    # def validate_candidateId(self, attrs):
+    #     print(attrs)
+    #     candidate = CandidateProfile.objects.filter(candidateId=attrs).first()
+    #     if candidate is None:
+    #         raise serializers.ValidationError("Candidate does not exist.")
+    #     return candidate
     
     def create(self, validated_data):
         print(validated_data)
@@ -98,7 +98,7 @@ class CandidateExperienceSerializer(serializers.ModelSerializer):
             'title': validated_data.get('title'),
             'description': validated_data.get('description'),
             'fromWhere': validated_data.get('fromWhere'),
-            'candidate': validated_data.get('candidate').get('candidateId')
+            'candidate': self.context.get('candidate')
         })
         obj.save()
         return obj
@@ -109,5 +109,5 @@ class CandidateExperienceSerializer(serializers.ModelSerializer):
             'title',
             'description',
             'fromWhere',
-            'candidateId'
+            # 'candidateId'
         ]

@@ -3,13 +3,26 @@ from django.core.files.storage import FileSystemStorage
 from .serializers import CandidateProfileSerializer, CandidateEducationSerializer, CandidateExperienceSerializer
 from utils.response import CustomResponse
 from db.candidate import CandidateProfile, CandidateDocumentLinker, Document
-from db.user import UserAuth
+from db.user import UserAuth, AccessKey
 from uuid import uuid4
 from django.http import HttpRequest
 from utils.security import require_access_key
 from utils.types import AccessKeyScope
 class CandidateProfileRegisterAPI(APIView):
     def get(self,request):
+        accessKey = request.GET.get('ACCESS_KEY')
+        if accessKey is not None:
+            accessKey = AccessKey.objects.filter(key=accessKey).first()
+            if accessKey is None:
+                return CustomResponse("Invalid Access Key!").send_failure_response(400)
+            candidate = CandidateProfile.objects.filter(userId=accessKey.userId.id).first()
+            if candidate is None:
+                return CustomResponse("Profile not found (2)!").send_failure_response(400)
+            serializer = CandidateProfileSerializer(candidate,many=False,partial=True)
+            return CustomResponse(
+                message="Profile",
+                data={**serializer.data}
+            ).send_success_response()
         candidateId = request.GET.get('candidateId')
         if candidateId is None:
             return CustomResponse("Candidate ID is required!").send_failure_response(400)
@@ -30,23 +43,24 @@ class CandidateProfileRegisterAPI(APIView):
             if request.user is None:
                 return CustomResponse("User not found, Invalid access key!").send_failure_response(400)
             photo = request.FILES.get('photo')
-            if photo is None:
-                return CustomResponse("Photo is required!").send_failure_response(400)
-            fs = FileSystemStorage()
-            name = fs.save(f'candidate/photos/{uuid4()}.jpg',photo)
-            url = fs.url(name)
-            uid = request.data.get('uid')
-            if uid is None:
-                return CustomResponse("UID is required!").send_failure_response(400)
-            user = UserAuth.objects.filter(uid=uid).first()
+            url = None
+            if photo is not None:
+                fs = FileSystemStorage()
+                name = fs.save(f'candidate/photos/{uuid4()}.jpg',photo)
+                url = fs.url(name)
+            user = request.user
             if user is None:
                 return CustomResponse("Invalid UID!").send_failure_response(400)
+            name = request.data.get('name')
             
+            if name is None:
+                return CustomResponse("Name is required!").send_failure_response(400)
             request_data = {
                 'photo': url,
                 'candidateId': request.data.get('candidateId'),
                 'about': request.data.get('about'),
-                "userId":user.id
+                "userId":user.id,
+                "name":name
             }
             
             serializer = CandidateProfileSerializer(data=request_data)
@@ -80,7 +94,8 @@ class CandidateProfileRegisterAPI(APIView):
                 serializer = CandidateProfileSerializer(instance=candidate,data=request_data,many=False,partial=True)
             else:
                 request_data = {
-                    'about': request.data.get('about') 
+                    'about': request.data.get('about',candidate.about) ,
+                    'name': request.data.get('name',candidate.name)
                 }
                 serializer = CandidateProfileSerializer(instance=candidate,data=request_data,many=False,partial=True)
             if serializer.is_valid():
@@ -108,7 +123,7 @@ class CandidateEducationAPI(APIView):
                 'fromWhere': request.data.get('fromWhere'),
                 'candidateId': candidate.candidateId
             }
-            serializer = CandidateEducationSerializer(data=request_data)
+            serializer = CandidateEducationSerializer(data=request_data,context={'candidate':candidate})
             if serializer.is_valid():
                 serializer.save()
                 return CustomResponse(
@@ -131,9 +146,8 @@ class CandidateExperienceAPI(APIView):
                 'title': request.data.get('title'),
                 'description': request.data.get('description'),
                 'fromWhere': request.data.get('fromWhere'),
-                'candidateId': candidate.candidateId
             }
-            serializer = CandidateExperienceSerializer(data=request_data)
+            serializer = CandidateExperienceSerializer(data=request_data,context={'candidate':candidate})
             if serializer.is_valid():
                 serializer.save()
                 return CustomResponse(

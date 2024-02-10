@@ -95,6 +95,7 @@ class FaceVerificationAPI(APIView):
         name = str(uuid4()) + ".jpg"
         fs.save(name,face.file)
         url = fs.path(name)
+        print(" # Detecting Face in the image...")
         embeddings = FaceVerifier.get_embeddings(url)
         fs.delete(name)
         if embeddings is None:
