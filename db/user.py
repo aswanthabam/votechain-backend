@@ -18,7 +18,8 @@ class UserAuth(models.Model):
     aadhar = models.CharField(max_length=100, unique=True, null=False, blank=False)
     enc1 = models.CharField(max_length=200, null=False, blank=False) # encrypted mneumonics with password
     enc2 = models.CharField(max_length=200, null=False, blank=False) # encrypted mneumonic with otp
-    face = models.ForeignKey('UserFace', on_delete=models.CASCADE, related_name='user_id', null=False, blank=False,default=UserFace.objects.create)
+    face = models.ForeignKey('UserFace', on_delete=models.CASCADE, related_name='user_id', null=False, blank=False)
+    app_key = models.CharField(max_length=100,null=True,blank=True,unique=True)
     face_registerd = models.BooleanField(default=False)
 
 class UserFaceCache(models.Model):
@@ -36,3 +37,17 @@ class UserDataAccess(models.Model):
     id = models.CharField(max_length=100, primary_key=True, unique=True,default=uuid4)
     token = models.CharField(max_length=100, unique=True, null=False, blank=False)
     scope = models.CharField(max_length=200, null=False, blank=False)
+
+
+class AppInstance(models.Model):
+    id = models.CharField(max_length=48, primary_key=True, unique=True,default=uuid4)
+    userId = models.OneToOneField('UserAuth', on_delete=models.CASCADE, related_name='app_instance_user_id')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class AccessKey(models.Model):
+    id = models.CharField(max_length=48, primary_key=True, unique=True,default=uuid4)
+    userId = models.OneToOneField('UserAuth', on_delete=models.CASCADE, related_name='access_key_user_id')
+    key = models.CharField(max_length=100, unique=True, null=False, blank=False)
+    scope = models.CharField(max_length=200, null=False, blank=False)
+    clientId = models.CharField(max_length=100, unique=True, null=False, blank=False)
+    created_at = models.DateTimeField(auto_now_add=True)

@@ -5,4 +5,5 @@ urlpatterns = [
     path("location/", include("api.location.urls")),
     path("web3/", include("api.web3.urls")),
     path("user/", include("api.user.urls")),
+    path("candidate/", include("api.candidate.urls")),
 ]

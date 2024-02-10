@@ -82,8 +82,8 @@ class FaceVerifier:
     @staticmethod
     def get_embeddings(image_url):
       image = dlib.load_rgb_image(image_url)
-      
       faces = FaceVerifier.cv2_face_detection(image_url)
+      print(" # Detected faces: ",faces)
       if len(faces) < 1:
         print("No face detected")
         return
@@ -128,7 +128,7 @@ class FaceVerifier:
     def cv2_face_detection(img_url) -> list[dlib.rectangle] | None:
         img = cv2.imread(img_url)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) 
-        faces = FaceVerifier.face_cascade.detectMultiScale(gray, 1.3, 10)
+        faces = FaceVerifier.face_cascade.detectMultiScale(gray, 1.3, 3)
         out = []
         for f in faces:
             x,y,w,h = FaceVerifier.preprocess_face(f)

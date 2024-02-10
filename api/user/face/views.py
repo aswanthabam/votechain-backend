@@ -8,6 +8,7 @@ from uuid import uuid4
 from db.user import UserFace, UserAuth, UserFaceCache
 from django.db.models import Q
 import json
+from utils.security import require_app_key
 
 class FaceRegistrationAPI(APIView):
 
@@ -30,7 +31,12 @@ class FaceRegistrationAPI(APIView):
             embeddings = FaceVerifier.get_embeddings(url)
             fs.delete(name)
             if embeddings is None:
-                return CustomResponse("No face found in the image!").send_failure_response(400)
+                return CustomResponse("No face found in the image!",data={
+                    'status':'fail',
+                    "face_found":False,
+                    'matching':False,
+                    'final':final
+                }).send_success_response(200)
             embeddings = embeddings.tolist()
             cache = UserFaceCache.objects.filter(face_id=face).first()
             if cache is None:
@@ -44,7 +50,12 @@ class FaceRegistrationAPI(APIView):
                 face_embed = FaceEmbedding(embeddings=existing_embeddings,embedding=existing_embedding)
                 status = face_embed.add_embeddings(embeddings)
                 if status is False:
-                    return CustomResponse("Face not consistent!").send_failure_response(400)
+                    return CustomResponse("Face not consistent!",data={
+                    'status':'fail',
+                    "face_found":True,
+                    'matching':False,
+                    'final':final
+                }).send_success_response(400)
                 cache.embedding = json.dumps(face_embed.embedding)
                 cache.embeddings = json.dumps(face_embed.embeddings)
                 cache.save()
@@ -57,14 +68,17 @@ class FaceRegistrationAPI(APIView):
                 user.save()
             return CustomResponse("Face Registration API Result",data={
                 'status':'success',
-                'final':final
+                'face_found':True,
+                'matching':True,
+                'final':final,
+                'face_key':face.face_key
             }).send_success_response()
         except Exception as e:
             print(e)
             return CustomResponse(str(e)).send_failure_response(400)
 
 class FaceVerificationAPI(APIView):
-
+    @require_app_key
     def post(self, request:HttpRequest):
         face = request.FILES.get('face')
         uid = request.data.get('uid')
@@ -81,8 +95,9 @@ class FaceVerificationAPI(APIView):
         name = str(uuid4()) + ".jpg"
         fs.save(name,face.file)
         url = fs.path(name)
+        print(" # Detecting Face in the image...")
         embeddings = FaceVerifier.get_embeddings(url)
-        # fs.delete(name)
+        fs.delete(name)
         if embeddings is None:
             print(" # No face found in the image!")
             return CustomResponse("No face found in the image!", data={

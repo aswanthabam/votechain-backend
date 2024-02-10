@@ -32,3 +32,6 @@ def decrypt(ciphertext:str, password:str):
     key = derive_key(password, salt)
     cipher = AES.new(key, AES.MODE_CBC, iv=iv)
     return unpad(cipher.decrypt(data[32:]), AES.block_size).decode('utf-8')
+
+if __name__ == "__main__":
+    print(encrypt('null2ddda','0xGYsXGZRLPXcjqtNAHloqnhZScjPQsGxvHjUVmqtNcxfKXi'))
