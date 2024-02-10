@@ -5,6 +5,7 @@ class CandidateProfile(models.Model):
     candidateId = models.IntegerField(max_length=100,null=False, blank=False, unique=True)
     photo = models.CharField(max_length=200, null=True, blank=False)
     about = models.TextField(null=True, blank=False)
+    userId = models.OneToOneField('UserAuth', on_delete=models.CASCADE, related_name='candidate_profile_user', null=False, blank=False)
 
 class CandidateDocumentLinker(models.Model):
     id = models.CharField(primary_key=True,max_length=100,null=False,blank=False, unique=True,default=uuid4)

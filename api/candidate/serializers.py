@@ -15,7 +15,8 @@ class CandidateProfileSerializer(serializers.ModelSerializer):
         obj =  CandidateProfile(**{
             'candidateId': validated_data['candidateId'],
             'about': validated_data['about'],
-            'photo': validated_data['photo']
+            'photo': validated_data['photo'],
+            'userId': validated_data['userId']
         })
         obj.save()
         return obj
@@ -44,7 +45,8 @@ class CandidateProfileSerializer(serializers.ModelSerializer):
             'photo',
             'education',
             'experience',
-            'documents'
+            'documents',
+            'userId'
         ]
 
 class CandidateEducationSerializer(serializers.ModelSerializer):
