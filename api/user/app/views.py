@@ -45,11 +45,40 @@ class GetAccessKey(APIView):
             scope = request.data.get('scope')
             if scope is None:
                 return CustomResponse("Scope is required!").send_failure_response(400)
+            old_keys = AccessKey.objects.filter(userId=user,clientId=clientId,scope=scope).first()
+            if old_keys:
+                return CustomResponse("Access Key Already Created",data={
+                    'access_key':old_keys.key
+                }).send_success_response()
             key = random_hex()
             access_key = AccessKey.objects.create(userId=user,key=key,scope=scope,clientId=clientId)
             return CustomResponse("Access Key Created",data={
                 'access_key':key
             }).send_success_response()
+        except Exception as e:
+            print(e)
+            return CustomResponse("An error occured").send_failure_response(500)
+    
+    @require_app_key
+    def get(self,request):
+        try:
+            user = request.user
+            clientId = request.GET.get('clientId')
+            if clientId is None:
+                return CustomResponse("Client ID is required!").send_failure_response(400)
+            if user is None:
+                return CustomResponse("User not found!").send_failure_response(400)
+            key = AccessKey.objects.filter(userId=user,clientId=clientId).first()
+            if key is None:
+                return CustomResponse("No access keys found!",data={
+                    'has_access_key':False
+                }).send_failure_response(400)
+            
+            return CustomResponse("Access Key",data={
+                'has_access_key':True,
+                'access_key':key.key
+            }).send_success_response()
+        
         except Exception as e:
             print(e)
             return CustomResponse("An error occured").send_failure_response(500)
