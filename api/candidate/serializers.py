@@ -5,7 +5,7 @@ from rest_framework.validators import UniqueValidator
 
 class CandidateProfileSerializer(serializers.ModelSerializer):
     
-    # candidateId = serializers.CharField(required=False)#,validators=[UniqueValidator(queryset=CandidateProfile.objects.all(),message='Candidate already has a profile')])
+    candidateAddress = serializers.CharField(validators=[UniqueValidator(queryset=CandidateProfile.objects.all(),message='Candidate with address already has a profile')])
     profileId = serializers.CharField(read_only=True, source='id')
     education = serializers.SerializerMethodField()
     experience = serializers.SerializerMethodField()
@@ -13,7 +13,7 @@ class CandidateProfileSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         obj =  CandidateProfile(**{
-            'candidateId': validated_data.get('candidateId'),
+            'candidateAddress': validated_data['candidateAddress'],
             'about': validated_data['about'],
             'photo': validated_data['photo'],
             'userId': validated_data['userId'],
@@ -41,7 +41,7 @@ class CandidateProfileSerializer(serializers.ModelSerializer):
         model = CandidateProfile
         fields = [
             'profileId',
-            'candidateId',
+            'candidateAddress',
             'about',
             'photo',
             'education',
@@ -54,13 +54,6 @@ class CandidateProfileSerializer(serializers.ModelSerializer):
 class CandidateEducationSerializer(serializers.ModelSerializer):
 
     educationId = serializers.CharField(read_only=True, source='id')
-
-    # def validate_candidateId(self, attrs):
-    #     print(attrs)
-    #     candidate = CandidateProfile.objects.filter(candidateId=attrs).first()
-    #     if candidate is None:
-    #         raise serializers.ValidationError("Candidate does not exist.")
-    #     return candidate
     
     def create(self, validated_data):
         print(validated_data)
@@ -82,15 +75,7 @@ class CandidateEducationSerializer(serializers.ModelSerializer):
         ]
 class CandidateExperienceSerializer(serializers.ModelSerializer):
 
-    # candidateId = serializers.IntegerField(source='candidate.candidateId')
     experienceId = serializers.CharField(read_only=True, source='id')
-
-    # def validate_candidateId(self, attrs):
-    #     print(attrs)
-    #     candidate = CandidateProfile.objects.filter(candidateId=attrs).first()
-    #     if candidate is None:
-    #         raise serializers.ValidationError("Candidate does not exist.")
-    #     return candidate
     
     def create(self, validated_data):
         print(validated_data)
@@ -109,5 +94,4 @@ class CandidateExperienceSerializer(serializers.ModelSerializer):
             'title',
             'description',
             'fromWhere',
-            # 'candidateId'
         ]

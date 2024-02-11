@@ -11,7 +11,8 @@ from utils.types import AccessKeyScope
 class CandidateProfileRegisterAPI(APIView):
     def get(self,request):
         accessKey = request.GET.get('ACCESS_KEY')
-        if accessKey is not None:
+        candidateAddress = request.GET.get('candidateAddress')
+        if accessKey is not None and candidateAddress is None:
             accessKey = AccessKey.objects.filter(key=accessKey).first()
             if accessKey is None:
                 return CustomResponse("Invalid Access Key!").send_failure_response(400)
@@ -23,12 +24,11 @@ class CandidateProfileRegisterAPI(APIView):
                 message="Profile",
                 data={**serializer.data}
             ).send_success_response()
-        candidateId = request.GET.get('candidateId')
-        if candidateId is None:
-            return CustomResponse("Candidate ID is required!").send_failure_response(400)
-        candidate = CandidateProfile.objects.filter(candidateId=candidateId).first()
+        if candidateAddress is None:
+            return CustomResponse("Candidate Address is required!").send_failure_response(400)
+        candidate = CandidateProfile.objects.filter(candidateAddress=candidateAddress).first()
         if candidate is None:
-            return CustomResponse("Invalid Candidate ID!").send_failure_response(400)
+            return CustomResponse("Invalid Candidate Address!").send_failure_response(400)
         serializer = CandidateProfileSerializer(candidate,many=False,partial=True)
         return CustomResponse(
             message="Profile",
@@ -57,7 +57,7 @@ class CandidateProfileRegisterAPI(APIView):
                 return CustomResponse("Name is required!").send_failure_response(400)
             request_data = {
                 'photo': url,
-                'candidateId': request.data.get('candidateId'),
+                'candidateAddress': request.data.get('candidateAddress'),
                 'about': request.data.get('about'),
                 "userId":user.id,
                 "name":name
@@ -89,7 +89,8 @@ class CandidateProfileRegisterAPI(APIView):
                 url = fs.url(name)
                 request_data = {
                     'photo': url,
-                    'about': request.data.get('about') 
+                    'about': request.data.get('about',candidate.about),
+                    'name': request.data.get('name',candidate.name) 
                 }
                 serializer = CandidateProfileSerializer(instance=candidate,data=request_data,many=False,partial=True)
             else:
@@ -120,8 +121,7 @@ class CandidateEducationAPI(APIView):
             request_data = {
                 'title': request.data.get('title'),
                 'description': request.data.get('description'),
-                'fromWhere': request.data.get('fromWhere'),
-                'candidateId': candidate.candidateId
+                'fromWhere': request.data.get('fromWhere')
             }
             serializer = CandidateEducationSerializer(data=request_data,context={'candidate':candidate})
             if serializer.is_valid():
