@@ -57,7 +57,7 @@ class CandidateProfileRegisterAPI(APIView):
                 return CustomResponse("Name is required!").send_failure_response(400)
             request_data = {
                 'photo': url,
-                'candidateId': request.data.get('candidateId'),
+                'candidateAddress': request.data.get('candidateAddress'),
                 'about': request.data.get('about'),
                 "userId":user.id,
                 "name":name
@@ -120,8 +120,7 @@ class CandidateEducationAPI(APIView):
             request_data = {
                 'title': request.data.get('title'),
                 'description': request.data.get('description'),
-                'fromWhere': request.data.get('fromWhere'),
-                'candidateId': candidate.candidateId
+                'fromWhere': request.data.get('fromWhere')
             }
             serializer = CandidateEducationSerializer(data=request_data,context={'candidate':candidate})
             if serializer.is_valid():
