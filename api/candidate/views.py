@@ -23,12 +23,12 @@ class CandidateProfileRegisterAPI(APIView):
                 message="Profile",
                 data={**serializer.data}
             ).send_success_response()
-        candidateId = request.GET.get('candidateId')
-        if candidateId is None:
-            return CustomResponse("Candidate ID is required!").send_failure_response(400)
-        candidate = CandidateProfile.objects.filter(candidateId=candidateId).first()
+        candidateAddress = request.GET.get('candidateAddress')
+        if candidateAddress is None:
+            return CustomResponse("Candidate Address is required!").send_failure_response(400)
+        candidate = CandidateProfile.objects.filter(candidateAddress=candidateAddress).first()
         if candidate is None:
-            return CustomResponse("Invalid Candidate ID!").send_failure_response(400)
+            return CustomResponse("Invalid Candidate Address!").send_failure_response(400)
         serializer = CandidateProfileSerializer(candidate,many=False,partial=True)
         return CustomResponse(
             message="Profile",
@@ -89,7 +89,8 @@ class CandidateProfileRegisterAPI(APIView):
                 url = fs.url(name)
                 request_data = {
                     'photo': url,
-                    'about': request.data.get('about') 
+                    'about': request.data.get('about',candidate.about),
+                    'name': request.data.get('name',candidate.name) 
                 }
                 serializer = CandidateProfileSerializer(instance=candidate,data=request_data,many=False,partial=True)
             else:
