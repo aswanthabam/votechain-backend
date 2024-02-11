@@ -11,7 +11,8 @@ from utils.types import AccessKeyScope
 class CandidateProfileRegisterAPI(APIView):
     def get(self,request):
         accessKey = request.GET.get('ACCESS_KEY')
-        if accessKey is not None:
+        candidateAddress = request.GET.get('candidateAddress')
+        if accessKey is not None and candidateAddress is None:
             accessKey = AccessKey.objects.filter(key=accessKey).first()
             if accessKey is None:
                 return CustomResponse("Invalid Access Key!").send_failure_response(400)
@@ -23,7 +24,6 @@ class CandidateProfileRegisterAPI(APIView):
                 message="Profile",
                 data={**serializer.data}
             ).send_success_response()
-        candidateAddress = request.GET.get('candidateAddress')
         if candidateAddress is None:
             return CustomResponse("Candidate Address is required!").send_failure_response(400)
         candidate = CandidateProfile.objects.filter(candidateAddress=candidateAddress).first()
