@@ -1,6 +1,5 @@
 from rest_framework import serializers
-from db.user import UserAuth
-from db.candidate import CandidateProfile, Education, Experience, CandidateDocumentLinker
+from db.candidate import CandidateProfile, Education, Experience, CandidateDocumentLinker, get_independent_party
 from rest_framework.validators import UniqueValidator
 
 class CandidateProfileSerializer(serializers.ModelSerializer):
@@ -10,14 +9,20 @@ class CandidateProfileSerializer(serializers.ModelSerializer):
     education = serializers.SerializerMethodField()
     experience = serializers.SerializerMethodField()
     documents = serializers.SerializerMethodField()
+    # partyId = serializers.CharField(source='party.id')
 
     def create(self, validated_data):
         obj =  CandidateProfile(**{
-            'candidateAddress': validated_data['candidateAddress'],
-            'about': validated_data['about'],
-            'photo': validated_data['photo'],
-            'userId': validated_data['userId'],
-            'name': validated_data['name']
+            'candidateAddress': validated_data.get('candidateAddress'),
+            'about': validated_data.get('about'),
+            'photo': validated_data.get('photo'),
+            'userId': validated_data.get('userId'),
+            'name': validated_data.get('name'),
+            'phone':validated_data.get('phone'),
+            'email':validated_data.get('email'),
+            'address':validated_data.get('address'),
+            'party':get_independent_party() if validated_data.get('party') is None else validated_data.get('party'),
+            'logo':validated_data.get('logo'),
         })
         obj.save()
         return obj
@@ -54,7 +59,7 @@ class CandidateProfileSerializer(serializers.ModelSerializer):
             'address',
             'party',
             'logo'
-            
+
         ]
 
 class CandidateEducationSerializer(serializers.ModelSerializer):

@@ -90,7 +90,7 @@ class CandidateProfileRegisterAPI(APIView):
             photo = request.FILES.get('photo')
             if photo:
                 fs = FileSystemStorage()
-                name = fs.save(f'{uuid4()}.jpg',photo)
+                name = fs.save(f'candidate/photos/{uuid4()}.jpg',photo)
                 url = fs.url(name)
                 request_data = {
                     'photo': url,
