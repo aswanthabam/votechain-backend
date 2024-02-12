@@ -10,6 +10,7 @@ class CandidateProfileSerializer(serializers.ModelSerializer):
     experience = serializers.SerializerMethodField()
     documents = serializers.SerializerMethodField()
     # partyId = serializers.CharField(source='party.id')
+    candidate_party = serializers.SerializerMethodField()
 
     def create(self, validated_data):
         obj =  CandidateProfile(**{
@@ -42,6 +43,12 @@ class CandidateProfileSerializer(serializers.ModelSerializer):
             'link':x.document.link
         } for x in documents]
     
+    def get_candidate_party(self, obj):
+        return {
+            'partyId':obj.party.id,
+            'name':obj.party.name,
+            'logo':obj.party.logo
+        }
     class Meta:
         model = CandidateProfile
         fields = [
@@ -58,8 +65,8 @@ class CandidateProfileSerializer(serializers.ModelSerializer):
             'email',
             'address',
             'party',
-            'logo'
-
+            'logo',
+            'candidate_party'
         ]
 
 class CandidateEducationSerializer(serializers.ModelSerializer):

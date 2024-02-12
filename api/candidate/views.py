@@ -67,7 +67,7 @@ class CandidateProfileRegisterAPI(APIView):
                 "party":request.data.get('party'),
                 "logo":request.data.get('logo')
             }
-            
+            print(request_data)
             serializer = CandidateProfileSerializer(data=request_data)
             if serializer.is_valid():
                 serializer.save()
@@ -99,7 +99,7 @@ class CandidateProfileRegisterAPI(APIView):
                     'phone': request.data.get('phone',candidate.phone),
                     'email': request.data.get('email',candidate.email),
                     'address': request.data.get('address',candidate.address),
-                    'party': request.data.get('party',candidate.party),
+                    'party': request.data.get('party',candidate.party.id),
                     'logo': request.data.get('logo',candidate.logo)
                     
                 }
@@ -111,7 +111,7 @@ class CandidateProfileRegisterAPI(APIView):
                     'phone': request.data.get('phone',candidate.phone),
                     'email': request.data.get('email',candidate.email),
                     'address': request.data.get('address',candidate.address),
-                    'party': request.data.get('party',candidate.party),
+                    'party': request.data.get('party',candidate.party.id),
                     'logo': request.data.get('logo',candidate.logo)
 
                 }
