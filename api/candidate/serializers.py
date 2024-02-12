@@ -9,8 +9,6 @@ class CandidateProfileSerializer(serializers.ModelSerializer):
     education = serializers.SerializerMethodField()
     experience = serializers.SerializerMethodField()
     documents = serializers.SerializerMethodField()
-    # partyId = serializers.CharField(source='party.id')
-    candidate_party = serializers.SerializerMethodField()
 
     def create(self, validated_data):
         obj =  CandidateProfile(**{
@@ -65,8 +63,7 @@ class CandidateProfileSerializer(serializers.ModelSerializer):
             'email',
             'address',
             'party',
-            'logo',
-            'candidate_party'
+            'logo'
         ]
 
 class CandidateEducationSerializer(serializers.ModelSerializer):

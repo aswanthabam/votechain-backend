@@ -22,7 +22,11 @@ class CandidateProfileRegisterAPI(APIView):
             serializer = CandidateProfileSerializer(candidate,many=False,partial=True)
             return CustomResponse(
                 message="Profile",
-                data={**serializer.data}
+                data={**serializer.data,'party':{
+                    'partyId':candidate.party.id,
+                    'name':candidate.party.name,
+                    'logo':candidate.party.logo
+                }}
             ).send_success_response()
         if candidateAddress is None:
             return CustomResponse("Candidate Address is required!").send_failure_response(400)
@@ -32,7 +36,11 @@ class CandidateProfileRegisterAPI(APIView):
         serializer = CandidateProfileSerializer(candidate,many=False,partial=True)
         return CustomResponse(
             message="Profile",
-            data={**serializer.data}
+            data={**serializer.data,'party':{
+                    'partyId':candidate.party.id,
+                    'name':candidate.party.name,
+                    'logo':candidate.party.logo
+                }}
         ).send_success_response()
     
     @require_access_key(AccessKeyScope.CANDIDATE_PROFILE.value)
