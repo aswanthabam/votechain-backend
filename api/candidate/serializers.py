@@ -48,7 +48,13 @@ class CandidateProfileSerializer(serializers.ModelSerializer):
             'experience',
             'documents',
             'name',
-            'userId'
+            'userId',
+            'phone',
+            'email',
+            'address',
+            'party',
+            'logo'
+            
         ]
 
 class CandidateEducationSerializer(serializers.ModelSerializer):

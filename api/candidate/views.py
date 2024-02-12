@@ -60,7 +60,12 @@ class CandidateProfileRegisterAPI(APIView):
                 'candidateAddress': request.data.get('candidateAddress'),
                 'about': request.data.get('about'),
                 "userId":user.id,
-                "name":name
+                "name":name,
+                "phone":request.data.get('phone'),
+                "email":request.data.get('email'),
+                "address":request.data.get('address'),
+                "party":request.data.get('party'),
+                "logo":request.data.get('logo')
             }
             
             serializer = CandidateProfileSerializer(data=request_data)
@@ -90,13 +95,25 @@ class CandidateProfileRegisterAPI(APIView):
                 request_data = {
                     'photo': url,
                     'about': request.data.get('about',candidate.about),
-                    'name': request.data.get('name',candidate.name) 
+                    'name': request.data.get('name',candidate.name) ,
+                    'phone': request.data.get('phone',candidate.phone),
+                    'email': request.data.get('email',candidate.email),
+                    'address': request.data.get('address',candidate.address),
+                    'party': request.data.get('party',candidate.party),
+                    'logo': request.data.get('logo',candidate.logo)
+                    
                 }
                 serializer = CandidateProfileSerializer(instance=candidate,data=request_data,many=False,partial=True)
             else:
                 request_data = {
                     'about': request.data.get('about',candidate.about) ,
-                    'name': request.data.get('name',candidate.name)
+                    'name': request.data.get('name',candidate.name),
+                    'phone': request.data.get('phone',candidate.phone),
+                    'email': request.data.get('email',candidate.email),
+                    'address': request.data.get('address',candidate.address),
+                    'party': request.data.get('party',candidate.party),
+                    'logo': request.data.get('logo',candidate.logo)
+
                 }
                 serializer = CandidateProfileSerializer(instance=candidate,data=request_data,many=False,partial=True)
             if serializer.is_valid():
