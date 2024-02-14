@@ -33,4 +33,4 @@ __pycache__/
 # Ignore Django migrations
 **/migrations/
 .vercel
-# assets
+assets2
