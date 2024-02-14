@@ -10,38 +10,42 @@ from utils.security import require_access_key
 from utils.types import AccessKeyScope
 class CandidateProfileRegisterAPI(APIView):
     def get(self,request):
-        accessKey = request.GET.get('ACCESS_KEY')
-        candidateAddress = request.GET.get('candidateAddress')
-        if accessKey is not None and candidateAddress is None:
-            accessKey = AccessKey.objects.filter(key=accessKey).first()
-            if accessKey is None:
-                return CustomResponse("Invalid Access Key!").send_failure_response(400)
-            candidate = CandidateProfile.objects.filter(userId=accessKey.userId.id).first()
-            if candidate is None:
-                return CustomResponse("Profile not found (2)!").send_failure_response(400)
+        try:
+            accessKey = request.GET.get('ACCESS_KEY')
+            candidateAddress = request.GET.get('candidateAddress')
+            if candidateAddress:
+                candidate = CandidateProfile.objects.filter(candidateAddress=candidateAddress).first()
+                if candidate is None:
+                    return CustomResponse("Invalid Candidate Address!").send_failure_response(400)
+            elif accessKey:
+                accessKey = AccessKey.objects.filter(key=accessKey).first()
+                if accessKey is None:
+                    return CustomResponse("Invalid Access Key!").send_failure_response(400)
+                candidate = CandidateProfile.objects.filter(userId=accessKey.userId.id).first()
+                if candidate is None:
+                    return CustomResponse("Profile not found (2)!").send_failure_response(400)
+            else:
+                return CustomResponse("Invalid Request expected candidate address or access key!").send_failure_response(400)
             serializer = CandidateProfileSerializer(candidate,many=False,partial=True)
+            if candidate.party.name != 'Independent':
+                logo = candidate.party.logo
+            else: logo = candidate.logo if candidate.logo else candidate.party.logo
+            data = {
+                **serializer.data,
+                'party':{
+                    'partyId':candidate.party.id,
+                    'name':candidate.party.name,
+                    'logo':candidate.party.logo
+                },
+                'logo': logo
+            }
             return CustomResponse(
                 message="Profile",
-                data={**serializer.data,'party':{
-                    'partyId':candidate.party.id,
-                    'name':candidate.party.name,
-                    'logo':candidate.party.logo
-                }}
+                data=data
             ).send_success_response()
-        if candidateAddress is None:
-            return CustomResponse("Candidate Address is required!").send_failure_response(400)
-        candidate = CandidateProfile.objects.filter(candidateAddress=candidateAddress).first()
-        if candidate is None:
-            return CustomResponse("Invalid Candidate Address!").send_failure_response(400)
-        serializer = CandidateProfileSerializer(candidate,many=False,partial=True)
-        return CustomResponse(
-            message="Profile",
-            data={**serializer.data,'party':{
-                    'partyId':candidate.party.id,
-                    'name':candidate.party.name,
-                    'logo':candidate.party.logo
-                }}
-        ).send_success_response()
+        except Exception as e:
+            print(e)
+            return CustomResponse("Error Occured while getting candidate profile!").send_failure_response(500)
     
     @require_access_key(AccessKeyScope.CANDIDATE_PROFILE.value)
     def post(self,request):

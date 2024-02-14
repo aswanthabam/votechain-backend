@@ -41,12 +41,7 @@ class CandidateProfileSerializer(serializers.ModelSerializer):
             'link':x.document.link
         } for x in documents]
     
-    def get_candidate_party(self, obj):
-        return {
-            'partyId':obj.party.id,
-            'name':obj.party.name,
-            'logo':obj.party.logo
-        }
+    
     class Meta:
         model = CandidateProfile
         fields = [
