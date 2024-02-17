@@ -7,4 +7,5 @@ urlpatterns = [
     path("user/", include("api.user.urls")),
     path("candidate/", include("api.candidate.urls")),
     path("party/", include("api.party.urls")),
+    path("election/", include("api.election.urls")),
 ]

@@ -50,16 +50,20 @@ class CandidateProfileRegisterAPI(APIView):
     @require_access_key(AccessKeyScope.CANDIDATE_PROFILE.value)
     def post(self,request):
         try:
-            if request.candidate is not None:
-                return CustomResponse("Profile already exists!").send_failure_response(400)
             if request.user is None:
                 return CustomResponse("User not found, Invalid access key!").send_failure_response(400)
             photo = request.FILES.get('photo')
+            logo = request.FILES.get('logo')
             url = None
+            logo_url = None
             if photo is not None:
                 fs = FileSystemStorage()
                 name = fs.save(f'candidate/photos/{uuid4()}.jpg',photo)
                 url = fs.url(name)
+            if logo is not None:
+                fs = FileSystemStorage()
+                name = fs.save(f'candidate/logo/{uuid4()}.jpg',logo)
+                logo_url = fs.url(name)
             user = request.user
             if user is None:
                 return CustomResponse("Invalid UID!").send_failure_response(400)
@@ -67,20 +71,35 @@ class CandidateProfileRegisterAPI(APIView):
             
             if name is None:
                 return CustomResponse("Name is required!").send_failure_response(400)
-            request_data = {
-                'photo': url,
-                'candidateAddress': request.data.get('candidateAddress'),
-                'about': request.data.get('about'),
-                "userId":user.id,
-                "name":name,
-                "phone":request.data.get('phone'),
-                "email":request.data.get('email'),
-                "address":request.data.get('address'),
-                "party":request.data.get('party'),
-                "logo":request.data.get('logo')
-            }
-            print(request_data)
-            serializer = CandidateProfileSerializer(data=request_data)
+            
+            if request.candidate is not None:
+                request_data = {
+                    'photo': url if url else request.candidate.photo,
+                    'candidateAddress': request.data.get('candidateAddress',request.candidate.candidateAddress),
+                    'about': request.data.get('about',request.candidate.about),
+                    "userId":user.id,
+                    "name":request.data.get('name',request.candidate.name),
+                    "phone":request.data.get('phone',request.candidate.phone),
+                    "email":request.data.get('email',request.candidate.email),
+                    "address":request.data.get('address',request.candidate.address),
+                    "party":request.data.get('party',request.candidate.party.id),
+                    "logo":logo_url if logo_url else request.candidate.logo
+                }
+                serializer = CandidateProfileSerializer(instance=request.candidate,data=request_data,many=False,partial=True)
+            else:
+                request_data = {
+                    'photo': url ,
+                    'candidateAddress': request.data.get('candidateAddress'),
+                    'about': request.data.get('about'),
+                    "userId":user.id,
+                    "name":name,
+                    "phone":request.data.get('phone'),
+                    "email":request.data.get('email'),
+                    "address":request.data.get('address'),
+                    "party":request.data.get('party'),
+                    "logo":logo_url
+                }
+                serializer = CandidateProfileSerializer(data=request_data)
             if serializer.is_valid():
                 serializer.save()
                 return CustomResponse(
