@@ -1,0 +1,291 @@
+[
+  [
+    "123456789012",
+    ["Alice", "", "Smith", "19900215"],
+    ["555-5678", "alice.smith@example.com"],
+    [
+      "Texas",
+      "Houston",
+      "Suburb",
+      "6",
+      "Cypress House",
+      "111",
+      "Maple Lane",
+      "77001"
+    ],
+    [
+      "Florida",
+      "Miami",
+      "Beachfront",
+      "6",
+      "Palm Villa",
+      "444",
+      "Ocean Drive",
+      "33101"
+    ],
+    true,
+    false,
+    "284fa10c-9684-4e8e-a0ff-e45954d06cc4"
+  ],
+
+  [
+    "234567890123",
+    ["Bob", "", "Johnson", "19880320"],
+    ["555-8765", "bob.johnson@example.com"],
+    [
+      "Illinois",
+      "Chicago",
+      "Downtown",
+      "6",
+      "Oak Residence",
+      "555",
+      "Lake Street",
+      "60601"
+    ],
+    [
+      "California",
+      "San Francisco",
+      "Bay Area",
+      "6",
+      "Redwood House",
+      "666",
+      "Golden Gate",
+      "94101"
+    ],
+    false,
+    true,
+    "284fa10c-9684-4e8e-a0ff-e45954d06cc4"
+  ],
+
+  [
+    "456789012345",
+    ["Charlie", "", "Brown", "19870425"],
+    ["555-9876", "charlie.brown@example.com"],
+    [
+      "Arizona",
+      "Phoenix",
+      "Desert Suburb",
+      "6",
+      "Sandstone House",
+      "999",
+      "Cactus Road",
+      "85001"
+    ],
+    [
+      "Colorado",
+      "Denver",
+      "Mountain View",
+      "6",
+      "Aspen Villa",
+      "111",
+      "Peak Avenue",
+      "80201"
+    ],
+    true,
+    false,
+    "284fa10c-9684-4e8e-a0ff-e45954d06cc4"
+  ],
+
+  [
+    "567890123456",
+    ["Diana", "", "Miller", "19980315"],
+    ["555-2345", "diana.miller@example.com"],
+    [
+      "Ohio",
+      "Columbus",
+      "Historic District",
+      "6",
+      "Brick House",
+      "222",
+      "Main Street",
+      "43201"
+    ],
+    [
+      "Georgia",
+      "Atlanta",
+      "Urban Center",
+      "6",
+      "Peach Villa",
+      "333",
+      "Peachtree Street",
+      "30301"
+    ],
+    false,
+    true,
+    "284fa10c-9684-4e8e-a0ff-e45954d06cc4"
+  ],
+
+  [
+    "678901234567",
+    ["Eric", "", "Davis", "19821005"],
+    ["555-3456", "eric.davis@example.com"],
+    [
+      "Michigan",
+      "Detroit",
+      "Industrial Zone",
+      "6",
+      "Steel Residence",
+      "444",
+      "Factory Lane",
+      "48201"
+    ],
+    [
+      "Minnesota",
+      "Minneapolis",
+      "City Lakes",
+      "6",
+      "Lakeside Villa",
+      "555",
+      "Lakeview Avenue",
+      "55401"
+    ],
+    true,
+    false,
+    "284fa10c-9684-4e8e-a0ff-e45954d06cc4"
+  ],
+
+  [
+    "789012345678",
+    ["Fiona", "", "Wilson", "19991220"],
+    ["555-6543", "fiona.wilson@example.com"],
+    [
+      "North Carolina",
+      "Raleigh",
+      "Greenbelt",
+      "6",
+      "Maplewood House",
+      "666",
+      "Meadow Lane",
+      "27601"
+    ],
+    [
+      "Oregon",
+      "Portland",
+      "Eco-Friendly District",
+      "6",
+      "Green Villa",
+      "777",
+      "Eco Street",
+      "97201"
+    ],
+    false,
+    true,
+    "9592876b-cb4f-48c4-8786-ddc38fc6fc4e"
+  ],
+
+  [
+    "890123456789",
+    ["George", "", "Taylor", "19850608"],
+    ["555-7654", "george.taylor@example.com"],
+    [
+      "Massachusetts",
+      "Boston",
+      "Historic Beacon Hill",
+      "6",
+      "Brownstone Residence",
+      "888",
+      "Beacon Street",
+      "02101"
+    ],
+    [
+      "Maryland",
+      "Baltimore",
+      "Inner Harbor",
+      "6",
+      "Harbor Villa",
+      "999",
+      "Harbor Drive",
+      "21201"
+    ],
+    true,
+    false,
+    "9592876b-cb4f-48c4-8786-ddc38fc6fc4e"
+  ],
+
+  [
+    "901234567890",
+    ["Helen", "", "Anderson", "19921030"],
+    ["555-8765", "helen.anderson@example.com"],
+    [
+      "Wisconsin",
+      "Milwaukee",
+      "Riverfront District",
+      "6",
+      "River House",
+      "000",
+      "Riverwalk Avenue",
+      "53201"
+    ],
+    [
+      "Missouri",
+      "St. Louis",
+      "Gateway District",
+      "6",
+      "Gateway Villa",
+      "111",
+      "Gateway Street",
+      "63101"
+    ],
+    false,
+    true,
+    "9592876b-cb4f-48c4-8786-ddc38fc6fc4e"
+  ],
+
+  [
+    "012345678901",
+    ["Ian", "", "Johnson", "19811212"],
+    ["555-9876", "ian.johnson@example.com"],
+    [
+      "Virginia",
+      "Richmond",
+      "Historic Fan District",
+      "6",
+      "Victorian House",
+      "222",
+      "Fan Street",
+      "23201"
+    ],
+    [
+      "Tennessee",
+      "Nashville",
+      "Music Row",
+      "6",
+      "Music Villa",
+      "333",
+      "Music Avenue",
+      "37201"
+    ],
+    true,
+    false,
+    "9592876b-cb4f-48c4-8786-ddc38fc6fc4e"
+  ],
+
+  [
+    "123456789012",
+    ["Jasmine", "", "Lee", "19960418"],
+    ["555-2345", "jasmine.lee@example.com"],
+    [
+      "Utah",
+      "Salt Lake City",
+      "Mountain Retreat",
+      "6",
+      "Mountain House",
+      "444",
+      "Summit Road",
+      "84101"
+    ],
+    [
+      "Nevada",
+      "Las Vegas",
+      "Entertainment Strip",
+      "6",
+      "Entertainment Villa",
+      "555",
+      "Strip Avenue",
+      "89101"
+    ],
+    true,
+    true,
+    "9592876b-cb4f-48c4-8786-ddc38fc6fc4e"
+  ]
+]

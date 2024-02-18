@@ -22,3 +22,5 @@ openpyxl
 # numpy
 # scipy
 # opencv-python
+# web3
+#6 eth-account
