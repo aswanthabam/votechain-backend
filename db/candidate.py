@@ -48,3 +48,4 @@ class Experience(models.Model):
     candidate = models.ForeignKey('CandidateProfile', on_delete=models.CASCADE, related_name='work_experience_candidate', null=False, blank=False)
     description = models.TextField(null=True, blank=False)
     fromWhere = models.CharField(max_length=200, null=True, blank=False)
+

@@ -20,6 +20,7 @@ class UserAuth(models.Model):
     enc2 = models.CharField(max_length=200, null=False, blank=False) # encrypted mneumonic with otp
     face = models.ForeignKey('UserFace', on_delete=models.CASCADE, related_name='user_id', null=False, blank=False)
     app_key = models.CharField(max_length=100,null=True,blank=True,unique=True)
+    voterAddress = models.CharField(max_length=100, unique=True, null=False, blank=False)
     face_registerd = models.BooleanField(default=False)
 
 class UserFaceCache(models.Model):

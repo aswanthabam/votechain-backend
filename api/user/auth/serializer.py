@@ -15,6 +15,7 @@ class UserAuthSerializer(serializers.ModelSerializer):
             'enc1': validated_data['enc1'],
             'enc2': validated_data['enc2'],
             'face': face,
+            'voterAddress': validated_data['voterAddress'],
             'app_key': app_key
         })
         obj.save()
@@ -31,6 +32,7 @@ class UserAuthSerializer(serializers.ModelSerializer):
             'enc1',
             'enc2',
             'face_id',
-            'app_key'
+            'app_key',
+            'voterAddress'
         ]
         write_only_fields = ['id','uid','aadhar']
