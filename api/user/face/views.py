@@ -78,7 +78,7 @@ class FaceRegistrationAPI(APIView):
             return CustomResponse(str(e)).send_failure_response(400)
 
 class FaceVerificationAPI(APIView):
-    @require_app_key
+    
     def post(self, request:HttpRequest):
         face = request.FILES.get('face')
         uid = request.data.get('uid')

@@ -21,7 +21,8 @@ class AuthAPILoginView(APIView):
                 message="Auth",
                 data={
                     'ec1': user.enc1,
-                    'ec2': user.enc2
+                    'ec2': user.enc2,
+                    'app_key':user.app_key
                 }
             ).send_success_response()
         except Exception as e:
